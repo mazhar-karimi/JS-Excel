@@ -8,6 +8,11 @@
             border-spacing: 0px;
         }
 
+        .selectedcell{
+
+            background-color: gray;
+        }
+
             #grid tr td {
                 border: 0.1px solid silver;
             }
@@ -42,12 +47,62 @@
                     td.contentEditable = true;
                     var cellcode = String.fromCharCode(h_text);
                     td.id = cellcode + i;
+                    td.col = cellcode;
+                    td.row = i;
+
+                    var mousedown = false;
+                    var dragging = false;
+                    td.onmousedown = function (s) {
+
+                        if (s.buttons == 1) {
+                            mousedown = true;
+                        }                        
+                    };
+
+                    var selected_cells = [];
+                    td.onmousemove = function (s) {
+                        if (mousedown) {
+                            dragging = true;                            
+                            this.classList.add('selectedcell');
+
+                            selected_cells.forEach(function (v,i,o) {
+                                if (o != this) {
+                                    selected_cells.push(this);
+                                }
+                            }, this);                                                      
+                        }
+                    };
+                    td.onmouseup = function (s) {
+                        mousedown = false;
+                        dragging = false;
+
+                        console.log(selected_cells);
+                    };
+
                     td.onkeydown = function (k) {
-                        if (k.key == "Enter") {
+                        console.log(k.key);
+
+                        if (k.key == "ArrowUp") {
                             event.preventDefault();
-                            console.log(cellcode);
-                            var neechaywalacell = document.getElementById(cellcode + (i + 1));
-                            console.log(neechaywalacell);
+                            var sib_cell = document.getElementById(this.col + (parseInt(this.row) - 1));
+                            sib_cell.focus();
+                        }
+
+                        if (k.key == "Enter" || k.key == "ArrowDown") {
+                            event.preventDefault();                            
+                            var sib_cell = document.getElementById(this.col + (parseInt(this.row) + 1));
+                            sib_cell.focus();
+                        }
+                        if (k.key == "ArrowRight") {
+                            event.preventDefault();
+                            var sib_cell = document.getElementById(String.fromCharCode(parseInt(this.col.charCodeAt(0))+1) + this.row);
+                            sib_cell.focus();
+                        }
+                        if (k.key == "ArrowLeft") {
+                            event.preventDefault();
+                            
+                            var sib_cell = document.getElementById(String.fromCharCode(parseInt(this.col.charCodeAt(0)) - 1) + this.row);
+                            sib_cell.focus();
                         }
                     };
 
