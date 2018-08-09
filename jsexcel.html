@@ -1,0 +1,66 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <style>
+        #grid {
+            border: 0.1px solid silver;
+            padding: 0px;
+            border-spacing: 0px;
+        }
+
+            #grid tr td {
+                border: 0.1px solid silver;
+            }
+    </style>
+</head>
+<body>
+    <table id="grid">
+        <thead></thead>
+    </table>
+
+    <script>
+        function init() {
+            var grid = document.getElementById('grid');
+
+            var h_text = 65;
+            grid.tHead.insertRow();
+            for (var i = 0; i < 20; i++) {
+                var col = document.createElement('th');
+                col.innerText = String.fromCharCode(h_text);
+                grid.tHead.rows[0].appendChild(col);
+                h_text++;
+            }
+
+            var tbody = grid.createTBody();
+
+            for (var i = 1; i <= 50; i++) {
+                var tr = document.createElement('tr');
+                var h_text = 65;
+                for (var j = 0; j < 20; j++) {
+                    var td = document.createElement('td');
+
+                    td.contentEditable = true;
+                    var cellcode = String.fromCharCode(h_text);
+                    td.id = cellcode + i;
+                    td.onkeydown = function (k) {
+                        if (k.key == "Enter") {
+                            event.preventDefault();
+                            console.log(cellcode);
+                            var neechaywalacell = document.getElementById(cellcode + (i + 1));
+                            console.log(neechaywalacell);
+                        }
+                    };
+
+                    tr.appendChild(td);
+                    h_text++;
+                }
+                tbody.appendChild(tr);
+            }
+        }
+
+        init();
+    </script>
+
+
+</body>
+</html>
